@@ -28,23 +28,36 @@ type Action = {
   signOut: () => void;
 };
 
+export type JwtPayload = {
+  token: string;
+  sub: string;
+  role: string;
+  exp: number;
+};
+
 async function fetchJwt(): Promise<string | undefined> {
   try {
     const session = await fetchAuthSession();
-    if (session.userSub) {
+    if (session.userSub && session.tokens?.accessToken) {
+      const jwtPayload: JwtPayload = {
+        token: session.tokens.accessToken.toString(),
+        sub: session.userSub,
+        role: "user",
+        exp: Math.floor(Date.now() / 1000) + 60 * 5,
+      };
       const response = await fetch("/api/auth", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          sub: session.userSub,
-          role: "user",
-          exp: Math.floor(Date.now() / 1000) + 60 * 5,
-        }),
+        body: JSON.stringify(jwtPayload),
       });
-      const token = await response.json<{ jwt: string }>();
-      return token.jwt;
+      if (response.ok) {
+        const token = await response.json<{ jwt: string }>();
+        return token.jwt;
+      } else {
+        console.log(response.status, response.statusText);
+      }
     }
   } catch (error) {
     console.log(error);
@@ -97,11 +110,11 @@ export const useAuth = create<SignInState & Action>((set) => ({
   jwt: "",
   fetchSession: async () => {
     const session = await fetchAuthSession();
-    const jwt = await fetchJwt();
+    const new_jwt = await fetchJwt();
     if (session.userSub) {
       set({
         isSignedIn: true,
-        jwt: jwt,
+        jwt: new_jwt,
       });
     }
   },

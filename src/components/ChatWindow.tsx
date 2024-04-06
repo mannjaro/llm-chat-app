@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useAuth } from "../hooks/cognito";
 import { decode } from "hono/jwt";
 
+import { JwtPayload } from "../hooks/cognito";
+
 export type Message = {
   role: "user" | "assistant";
   content: string;
@@ -10,11 +12,21 @@ function ChatWindow() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
-  const { jwt } = useAuth();
+  const { jwt, fetchSession } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (message === "") return;
+    const token: { header: any; payload: JwtPayload } = decode(jwt);
+    if (Math.floor(Date.now() / 1000) > token.payload.exp) {
+      try {
+        fetchSession();
+      } catch (e) {
+        console.log(e);
+        return;
+      }
+    }
+
     setIsGenerating(true);
     setMessages((messages) => [
       ...messages,
