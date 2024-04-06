@@ -11,14 +11,9 @@ import About from "./pages/about";
 import Chat from "./pages/chat";
 import Auth from "./pages/auth";
 
-Amplify.configure({
-  Auth: {
-    Cognito: {
-      userPoolId: "ap-northeast-1_fPBigic0T",
-      userPoolClientId: "75iopd465ji4csl15opqlfdn4e",
-    },
-  },
-});
+import { config } from "../amplify.configure";
+
+Amplify.configure(config);
 
 cognitoUserPoolsTokenProvider.setKeyValueStorage(new CookieStorage());
 

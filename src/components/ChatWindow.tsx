@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../hooks/cognito";
+import { decode } from "hono/jwt";
+
 export type Message = {
   role: "user" | "assistant";
   content: string;
@@ -19,7 +21,6 @@ function ChatWindow() {
       { role: "user", content: message },
       { role: "assistant", content: "" },
     ]);
-    console.log(jwt);
     const response = await fetch("/api/chat", {
       method: "POST",
       headers: {
