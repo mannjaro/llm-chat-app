@@ -14,17 +14,16 @@ export default defineConfig(({ mode }) => {
         },
       },
     };
-  } else {
-    return {
-      ssr: {
-        external: ["react", "react-dom", "openai", "aws-jwt-verify"],
-      },
-      plugins: [
-        pages(),
-        devServer({
-          entry: "src/index.tsx",
-        }),
-      ],
-    };
   }
+  return {
+    ssr: {
+      external: ["react", "react-dom", "openai", "aws-jwt-verify"],
+    },
+    plugins: [
+      pages(),
+      devServer({
+        entry: "src/index.tsx",
+      }),
+    ],
+  };
 });
