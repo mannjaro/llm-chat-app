@@ -30,7 +30,7 @@ auth.post("/", async (c) => {
     const verify = await verifier.verify(payload.token);
   } catch (e) {
     throw new HTTPException(401, {
-      message: "Cognito JWT is Invalid",
+      message: "JWT is Invalid (Cognito idp may be different)",
       cause: e,
     });
   }

@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 type Chat = {
@@ -5,7 +6,7 @@ type Chat = {
 };
 
 type Body = {
-  role: string;
+  role: "user" | "assistant";
   message: string;
 };
 
@@ -19,13 +20,19 @@ export const user = sqliteTable("user", {
   email: text("email"),
 });
 
-export const conversations = sqliteTable("conversations", {
-  id: text("id").primaryKey().notNull(),
-  userId: integer("user_id").references(() => user.id),
-});
+export const userRelations = relations(user, ({ many }) => ({
+  conversations: many(conversation),
+}));
 
 export const conversation = sqliteTable("conversation", {
   id: text("id").primaryKey().notNull(),
-  parent: integer("parent").references(() => conversations.id),
+  userId: integer("userId"),
   body: text("body", { mode: "json" }).$type<Chat>(),
 });
+
+export const convsUserRelations = relations(conversation, ({ one }) => ({
+  user: one(user, {
+    fields: [conversation.userId],
+    references: [user.id],
+  }),
+}));

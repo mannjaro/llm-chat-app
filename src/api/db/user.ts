@@ -1,7 +1,11 @@
 import { drizzle } from "drizzle-orm/d1";
-import * as schema from "../schema";
 import { Hono } from "hono";
 import { jwt } from "hono/jwt";
+import { decode } from "hono/jwt";
+import * as schema from "../../schema";
+
+import { eq } from "drizzle-orm";
+import { type JwtPayload, useAuth } from "../../hooks/cognito";
 
 type Bindings = {
   DB: D1Database;
@@ -24,16 +28,23 @@ user.use("/*", (c, next) => {
   return jwtMiddleware(c, next);
 });
 
-user.get("/", async (c) => {
-  const db = drizzle(c.env.DB, { schema });
-  const result = await db.query.user.findMany();
-  return c.json(result);
-});
-
 user.get("/:id", async (c) => {
-  const id = c.req.param("id");
+  const { jwt } = useAuth();
+  const token: { payload: JwtPayload } = decode(jwt);
+  const id = token.payload.sub;
+  if (id !== c.req.param("id")) {
+    c.status(401);
+    return c.text("Request ID is invalid", 401);
+  }
   const db = drizzle(c.env.DB, { schema });
   const result = await db.query.user.findMany({
+    with: {
+      conversations: {
+        columns: {
+          id: true,
+        },
+      },
+    },
     where: (user, { eq }) => eq(user.id, id),
   });
   return c.json(result);
@@ -42,24 +53,25 @@ user.get("/:id", async (c) => {
 user.post("/", async (c) => {
   const req = await c.req.json<typeof schema.user.$inferInsert>();
   const db = drizzle(c.env.DB);
-  const result = await db.insert(schema.user).values(req).execute();
-  c.status(200);
-  return c.text("");
+  const result = await db.insert(schema.user).values(req);
+  return c.json(result);
 });
 
 user.put("/:id", async (c) => {
+  const id = c.req.param("id");
   const req = await c.req.json<typeof schema.user.$inferInsert>();
   const db = drizzle(c.env.DB);
-  const result = await db.update(schema.user).set(req).execute();
-  c.status(200);
-  return c.text("");
+  const result = await db
+    .update(schema.user)
+    .set({ id: id, email: req.email, name: req.name });
+  return c.json(result);
 });
 
 user.delete("/:id", async (c) => {
+  const id = c.req.param("id");
   const db = drizzle(c.env.DB);
-  const result = await db.delete(schema.user).execute();
-  c.status(200);
-  return c.text("");
+  const result = await db.delete(schema.user).where(eq(schema.user.id, id));
+  return c.json(result);
 });
 
 export { user };
