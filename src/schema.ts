@@ -14,18 +14,18 @@ type Body = {
 */
 
 export const user = sqliteTable("user", {
-  id: integer("id").primaryKey().notNull(),
+  id: text("id").primaryKey().notNull(),
   name: text("name"),
   email: text("email"),
 });
 
 export const conversations = sqliteTable("conversations", {
-  id: integer("id").primaryKey().notNull(),
+  id: text("id").primaryKey().notNull(),
   userId: integer("user_id").references(() => user.id),
 });
 
 export const conversation = sqliteTable("conversation", {
-  id: integer("id").primaryKey().notNull(),
+  id: text("id").primaryKey().notNull(),
   parent: integer("parent").references(() => conversations.id),
   body: text("body", { mode: "json" }).$type<Chat>(),
 });
