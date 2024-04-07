@@ -3,7 +3,7 @@ import { useState } from "react";
 function Counter() {
   const [count, setCount] = useState(0);
   return (
-    <button onClick={() => setCount(count + 1)}>
+    <button type="button" onClick={() => setCount(count + 1)}>
       You clicked me {count} times
     </button>
   );
@@ -16,8 +16,8 @@ const ClockButton = () => {
     const response = await fetch("/api/clock");
     const data = await response.json();
     const headers = Array.from(response.headers.entries()).reduce(
-      (acc, [key, value]) => ({ ...acc, [key]: value }),
-      {}
+      (acc, [key, value]) => Object.assign(acc, { [key]: value }),
+      {},
     );
     const fullResponse = {
       url: response.url,
@@ -30,7 +30,9 @@ const ClockButton = () => {
 
   return (
     <div>
-      <button onClick={handleClick}>Get Server Time</button>
+      <button type="button" onClick={handleClick}>
+        Get Server Time
+      </button>
       {response && <pre>{response}</pre>}
     </div>
   );

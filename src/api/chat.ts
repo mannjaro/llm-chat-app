@@ -1,15 +1,15 @@
 import { Hono } from "hono";
-import { streamText } from "hono/streaming";
 import { env } from "hono/adapter";
+import { streamText } from "hono/streaming";
 
-import OpenAI from "openai";
-import { Message } from "../components/ChatWindow";
 import { jwt } from "hono/jwt";
+import OpenAI from "openai";
+import type { Message } from "../components/ChatWindow";
 
 const chat = new Hono();
 
 chat.use("/*", (c, next) => {
-  var secret = "";
+  let secret = "";
   if (import.meta.env.DEV) {
     secret = import.meta.env.VITE_APP_JWT_SECRET;
   } else {
@@ -23,7 +23,7 @@ chat.use("/*", (c, next) => {
 });
 
 chat.post("/", async (c) => {
-  var apiKey = "";
+  let apiKey = "";
   if (import.meta.env.DEV) {
     apiKey = import.meta.env.VITE_APP_OPENAI_API_KEY;
   } else {
