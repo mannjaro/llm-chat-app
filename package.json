@@ -3,8 +3,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build --mode client && vite build",
-    "preview": "wrangler pages dev dist",
-    "deploy": "$npm_execpath run build && wrangler pages deploy dist"
+    "preview": "$npm_execpath run build && wrangler pages dev dist",
+    "deploy": "$npm_execpath run build && wrangler pages deploy dist",
+    "migration:local": "drizzle-kit generate:sqlite && wrangler d1 migrations apply chat-history --local",
+    "migration:remote": "drizzle-kit generate:sqlite && wrangler d1 migrations apply chat-history --remote"
   },
   "dependencies": {
     "@aws-sdk/client-cognito-identity-provider": "^3.540.0",
@@ -31,6 +33,6 @@
     "amazon-user-pool-srp-client": "^1.0.4",
     "drizzle-kit": "^0.20.14",
     "vite": "^5.0.12",
-    "wrangler": "^3.41.0"
+    "wrangler": "^3.48.0"
   }
 }

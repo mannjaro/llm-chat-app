@@ -4,11 +4,13 @@ import { renderToString } from "react-dom/server";
 import { clock } from "./api/clock";
 import { chat } from "./api/chat";
 import { auth } from "./api/auth";
+import { db } from "./api/db";
 
 const app = new Hono();
 app.route("/api/clock", clock);
 app.route("/api/chat", chat);
 app.route("/api/auth", auth);
+app.route("/api/db", db);
 
 app.get("*", (c) => {
   return c.html(

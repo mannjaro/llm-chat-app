@@ -224,3 +224,5 @@ sketch
 wrangler.toml
 
 amplify.configure.ts
+
+**/drizzle

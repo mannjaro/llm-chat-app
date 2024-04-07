@@ -1,4 +1,4 @@
-import React, { useState, FormEventHandler, useEffect } from "react";
+import { FormEventHandler, useEffect } from "react";
 import { useAuth } from "../hooks/cognito";
 
 function Auth() {
