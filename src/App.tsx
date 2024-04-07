@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Outlet, NavLink } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "./hooks/cognito";
 function App() {
   const { fetchSession } = useAuth();

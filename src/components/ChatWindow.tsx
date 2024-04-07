@@ -1,8 +1,8 @@
+import { decode } from "hono/jwt";
 import { useState } from "react";
 import { useAuth } from "../hooks/cognito";
-import { decode } from "hono/jwt";
 
-import { JwtPayload } from "../hooks/cognito";
+import type { JwtPayload } from "../hooks/cognito";
 
 export type Message = {
   role: "user" | "assistant";
@@ -17,7 +17,7 @@ function ChatWindow() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (message === "") return;
-    const token: { header: any; payload: JwtPayload } = decode(jwt);
+    const token: { payload: JwtPayload } = decode(jwt);
     if (Math.floor(Date.now() / 1000) > token.payload.exp) {
       try {
         fetchSession();
@@ -37,7 +37,7 @@ function ChatWindow() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + jwt,
+        Authorization: `Bearer ${jwt}`,
       },
       body: JSON.stringify({ message, messages }),
     });
@@ -81,7 +81,6 @@ function ChatWindow() {
                     color: "white",
                     borderRadius: "5px",
                   }}
-                  key={i}
                 >
                   {message.content}
                 </div>
@@ -95,7 +94,6 @@ function ChatWindow() {
                   color: "black",
                   borderRadius: "5px",
                 }}
-                key={i}
               >
                 {message.content}
               </div>

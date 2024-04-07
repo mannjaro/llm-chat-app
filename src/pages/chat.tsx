@@ -1,5 +1,5 @@
-import { useAuth } from "../hooks/cognito";
 import ChatWindow from "../components/ChatWindow";
+import { useAuth } from "../hooks/cognito";
 function Chat() {
   const { isSignedIn } = useAuth();
   return (

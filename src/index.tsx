@@ -1,9 +1,9 @@
 import { Hono } from "hono";
 import { renderToString } from "react-dom/server";
 
-import { clock } from "./api/clock";
-import { chat } from "./api/chat";
 import { auth } from "./api/auth";
+import { chat } from "./api/chat";
+import { clock } from "./api/clock";
 import { db } from "./api/db";
 
 const app = new Hono();
@@ -15,7 +15,7 @@ app.route("/api/db", db);
 app.get("*", (c) => {
   return c.html(
     renderToString(
-      <html>
+      <html lang="ja">
         <head>
           <meta charSet="utf-8" />
           <meta content="width=device-width, initial-scale=1" name="viewport" />
@@ -25,19 +25,19 @@ app.get("*", (c) => {
           />
           {import.meta.env.PROD ? (
             <>
-              <script type="module" src="/static/client.js"></script>
+              <script type="module" src="/static/client.js" />
             </>
           ) : (
             <>
-              <script type="module" src="/src/client.tsx"></script>
+              <script type="module" src="/src/client.tsx" />
             </>
           )}
         </head>
         <body>
-          <div id="root"></div>
+          <div id="root" />
         </body>
-      </html>
-    )
+      </html>,
+    ),
   );
 });
 

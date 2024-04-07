@@ -1,13 +1,9 @@
-import { FormEventHandler, useEffect } from "react";
+import { type FormEventHandler, useEffect } from "react";
 import { useAuth } from "../hooks/cognito";
 
 function Auth() {
   const { isSignedIn, step, fetchSession, signIn, signOut, confirmSignIn } =
     useAuth();
-
-  useEffect(() => {
-    fetchSession();
-  }, []);
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();

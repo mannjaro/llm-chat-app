@@ -1,13 +1,13 @@
-import { create } from "zustand";
 import {
-  signIn,
-  SignInInput,
-  SignInOutput,
+  type ConfirmSignInInput,
+  type SignInInput,
+  type SignInOutput,
   confirmSignIn,
-  ConfirmSignInInput,
-  signOut,
   fetchAuthSession,
+  signIn,
+  signOut,
 } from "aws-amplify/auth";
+import { create } from "zustand";
 
 type SignInRes = {
   isSuccess: boolean;
@@ -52,12 +52,13 @@ async function fetchJwt(): Promise<string | undefined> {
         },
         body: JSON.stringify(jwtPayload),
       });
-      if (response.ok) {
-        const token = await response.json<{ jwt: string }>();
-        return token.jwt;
-      } else {
+      if (!response.ok) {
         console.log(response.status, response.statusText);
+        // #TODO: Riase Error
+        return "";
       }
+      const token = await response.json<{ jwt: string }>();
+      return token.jwt;
     }
   } catch (error) {
     console.log(error);

@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { env } from "hono/adapter";
-import { sign } from "hono/jwt";
 import { HTTPException } from "hono/http-exception";
+import { sign } from "hono/jwt";
 
 import { CognitoJwtVerifier } from "aws-jwt-verify";
 
@@ -25,7 +25,7 @@ type Payload = {
 
 auth.post("/", async (c) => {
   const payload = await c.req.json<Payload>();
-  var secret = "";
+  let secret = "";
   try {
     const verify = await verifier.verify(payload.token);
   } catch (e) {
