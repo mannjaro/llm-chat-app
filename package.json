@@ -6,7 +6,8 @@
     "preview": "$npm_execpath run build && wrangler pages dev dist",
     "deploy": "$npm_execpath run build && wrangler pages deploy dist",
     "migration:local": "drizzle-kit generate:sqlite && wrangler d1 migrations apply chat-history --local",
-    "migration:remote": "drizzle-kit generate:sqlite && wrangler d1 migrations apply chat-history --remote"
+    "migration:remote": "drizzle-kit generate:sqlite && wrangler d1 migrations apply chat-history --remote",
+    "check": "biome check --apply src/**"
   },
   "dependencies": {
     "@aws-sdk/client-cognito-identity-provider": "^3.540.0",
