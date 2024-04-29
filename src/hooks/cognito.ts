@@ -13,12 +13,14 @@ type SignInRes = {
   isSuccess: boolean;
   isSignedIn: boolean;
   step: SignInOutput | undefined;
+  error?: unknown;
 };
 
 type SignInState = {
   isSignedIn: boolean;
   jwt: string;
   step: SignInOutput | undefined;
+  error?: unknown;
 };
 
 type Action = {
@@ -71,14 +73,18 @@ async function handleSignIn({
 }: SignInInput): Promise<SignInRes> {
   try {
     const response = await signIn({ username, password });
-    console.log(response);
-    return { isSuccess: true, isSignedIn: response.isSignedIn, step: response };
+    return {
+      isSuccess: true,
+      isSignedIn: response.isSignedIn,
+      step: response,
+    };
   } catch (error) {
-    console.log("error signing in", error);
+    console.log("error signing in", error, typeof error);
     return {
       isSuccess: false,
       isSignedIn: false,
       step: undefined,
+      error: error,
     };
   }
 }
@@ -109,6 +115,7 @@ export const useAuth = create<SignInState & Action>((set) => ({
   step: undefined,
   isSignedIn: false,
   jwt: "",
+  error: undefined,
   fetchSession: async () => {
     const session = await fetchAuthSession();
     const new_jwt = await fetchJwt();
@@ -126,6 +133,7 @@ export const useAuth = create<SignInState & Action>((set) => ({
       isSignedIn: response.isSignedIn,
       jwt: jwt,
       step: response.step,
+      error: response.error,
     });
   },
   confirmSignIn: async ({ challengeResponse, options }: ConfirmSignInInput) => {

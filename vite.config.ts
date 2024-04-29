@@ -6,6 +6,7 @@ export default defineConfig(({ mode }) => {
   if (mode === "client") {
     return {
       build: {
+        manifest: true,
         rollupOptions: {
           input: "./src/client.tsx",
           output: {
@@ -17,7 +18,15 @@ export default defineConfig(({ mode }) => {
   }
   return {
     ssr: {
-      external: ["react", "react-dom", "openai", "aws-jwt-verify"],
+      external: [
+        "react",
+        "react-dom",
+        "openai",
+        "aws-jwt-verify",
+        "drizzle-orm",
+        "aws-amplify",
+        "zustand",
+      ],
     },
     plugins: [
       pages(),
