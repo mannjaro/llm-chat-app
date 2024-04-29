@@ -6,11 +6,11 @@ export default defineConfig(({ mode }) => {
   if (mode === "client") {
     return {
       build: {
-        manifest: true,
         rollupOptions: {
-          input: "./src/client.tsx",
+          input: ["./src/client.tsx", "./src/style.css"],
           output: {
             entryFileNames: "static/client.js",
+            assetFileNames: "static/assets/[name].[ext]",
           },
         },
       },

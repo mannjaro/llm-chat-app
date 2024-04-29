@@ -22,10 +22,12 @@ app.get("*", (c) => {
           <meta content="width=device-width, initial-scale=1" name="viewport" />
           {import.meta.env.PROD ? (
             <>
+              <link href="/static/assets/style.css" rel="stylesheet" />
               <script type="module" src="/static/client.js" />
             </>
           ) : (
             <>
+              <link href="/src/style.css" rel="stylesheet" />
               <script type="module" src="/src/client.tsx" />
             </>
           )}
