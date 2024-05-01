@@ -26,17 +26,46 @@ function Auth() {
 
   return (
     <>
-      <h2>SignIn</h2>
+      <h2 className="font-bold text-2xl py-4">Login</h2>
       {!isSignedIn && (
-        <form onSubmit={handleSubmit}>
-          <label>E-mail</label>
-          <input type="email" name="email" />
-          <label>Password</label>
-          <input type="password" name="password" />
-          <button type="submit" value="submit">
-            Login
-          </button>
-        </form>
+        <div className="w-full max-w-xs mx-auto">
+          <form
+            onSubmit={handleSubmit}
+            className="shadow-md rounded px-8 pt-6 pb-8 mb-4"
+          >
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Email
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="email"
+                name="email"
+                type="email"
+                placeholder="test@example.com"
+              />
+            </div>
+            <div className="mb-6 ">
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Password
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                id="password"
+                name="password"
+                type="password"
+                placeholder="******************"
+              />
+            </div>
+            <button
+              type="submit"
+              value="submit"
+              className="transition duration-200 text-white font-bold px-4 py-2 bg-sky-500 hover:bg-sky-700 rounded focus:outline-none focus:shadow-outline"
+            >
+              Login
+            </button>
+          </form>
+        </div>
       )}
       {step?.nextStep.signInStep ===
         "CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED" && (
@@ -53,10 +82,16 @@ function Auth() {
       )}
       {isSignedIn && (
         <>
-          <p>You are signed In!</p>
-          <button type="submit" onClick={handleSignOut}>
-            Sign Out
-          </button>
+          <div className="w-full max-w-xs mx-auto">
+            <p className="py-2">You are signed In!</p>
+            <button
+              type="submit"
+              onClick={handleSignOut}
+              className="transition duration-200 text-white font-bold px-4 py-2 bg-sky-500 hover:bg-sky-700 rounded focus:outline-none focus:shadow-outline"
+            >
+              Sign Out
+            </button>
+          </div>
         </>
       )}
     </>

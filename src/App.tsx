@@ -1,6 +1,9 @@
 import { useEffect } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { useAuth } from "./hooks/cognito";
+
+import Navbar from "./components/Navbar";
+
 function App() {
   const { fetchSession } = useAuth();
   useEffect(() => {
@@ -8,41 +11,10 @@ function App() {
   }, []);
   return (
     <>
-      <Outlet />
-      <ul>
-        <li>
-          <NavLink
-            style={({ isActive }) => (isActive ? { color: "gray" } : undefined)}
-            to="/"
-          >
-            Home
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            style={({ isActive }) => (isActive ? { color: "gray" } : undefined)}
-            to="/about"
-          >
-            About
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            style={({ isActive }) => (isActive ? { color: "gray" } : undefined)}
-            to="/chat"
-          >
-            Chat
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            style={({ isActive }) => (isActive ? { color: "gray" } : undefined)}
-            to="/auth"
-          >
-            Auth
-          </NavLink>
-        </li>
-      </ul>
+      <Navbar />
+      <div className="container mx-auto">
+        <Outlet />
+      </div>
     </>
   );
 }
