@@ -36,7 +36,7 @@ chat.post("/", async (c) => {
   const body = await c.req.json<{ message: string; messages: Message[] }>();
   return streamText(c, async (stream) => {
     const chatStream = openai.beta.chat.completions.stream({
-      model: "gpt-3.5-turbo",
+      model: "gpt-3.5-turbo-0125",
       messages: [...body.messages, { role: "user", content: body.message }],
       stream: true,
     });
