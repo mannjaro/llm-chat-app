@@ -1,5 +1,5 @@
 import { decode } from "hono/jwt";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useAuth } from "../hooks/cognito";
 
 import type { JwtPayload } from "../hooks/cognito";
@@ -13,6 +13,14 @@ function ChatWindow() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const { jwt, fetchSession } = useAuth();
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  useEffect(() => {
+    const textArea = textAreaRef.current;
+    if (textArea !== null) {
+      textArea.style.height = "auto";
+      textArea.style.height = `${textArea.scrollHeight}px`;
+    }
+  }, [message]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -52,11 +60,7 @@ function ChatWindow() {
       }
       if (!value) continue;
       const lines = decoder.decode(value);
-      const chunks = lines
-        .split("data: ")
-        .map((line) => line.trim())
-        .filter((s) => s);
-      for (const chunk of chunks) {
+      for (const chunk of lines) {
         setMessages((messages) => {
           const content = messages[messages.length - 1].content;
           return [
@@ -74,44 +78,38 @@ function ChatWindow() {
           {messages.map((message, i) => {
             if (message.role === "user") {
               // User Message
-              return (
-                <div
-                  style={{
-                    background: "darkgray",
-                    color: "white",
-                    borderRadius: "5px",
-                  }}
-                >
-                  {message.content}
-                </div>
-              );
+              return <div className="">{message.content}</div>;
             }
             // AI Message
             return (
-              <div
-                style={{
-                  background: "lightgreen",
-                  color: "black",
-                  borderRadius: "5px",
-                }}
-              >
+              <div key={i} className="">
                 {message.content}
               </div>
             );
           })}
         </div>
       </div>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          placeholder="Type your message..."
-        />
-        <button className="button" disabled={isGenerating} type="submit">
-          {isGenerating ? "Generating..." : "Send"}
-        </button>
-      </form>
+      <div className="fixed bottom-1 left-1/2 -translate-x-1/2 w-full max-w-xl">
+        <form className="flex" onSubmit={handleSubmit}>
+          <textarea
+            ref={textAreaRef}
+            value={message}
+            rows={1}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Type your message..."
+            className="block resize-none max-h-[10rem] w-full border rounded shadow px-4 py-2 focus:outline-none"
+          />
+          <button
+            className={`mx-2 px-2 py-2 border rounded transition duration-200 hover:bg-slate-100 ${
+              isGenerating ? "bg-gray-300 text-gray-500 hover:bg-gray-300" : ""
+            }`}
+            disabled={isGenerating}
+            type="submit"
+          >
+            Send
+          </button>
+        </form>
+      </div>
     </>
   );
 }
